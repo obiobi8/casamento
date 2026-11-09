@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Casamento Albert &amp; Obito</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0d1a1b;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    .invite-card {
+      width: 100%;
+      max-width: 430px;
+      height: 740px;
+      max-height: 94vh;
+      background: #faf7f2;
+      position: relative;
+      border-radius: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1), transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.97);
+      background-color: #faf7f2;
+      background-image: radial-gradient(#d5e2de 0.8px, transparent 0.8px);
+      background-size: 20px 20px;
+      overflow: hidden;
+    }
+
+    .page.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* --- PÁGINA 1: ENVELOPE --- */
+    #page-envelope {
+      background-color: #e4f0f1;
+      background-image: none;
+    }
+
+    .envelope-left {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 53%;
+      background: #f7fbfb;
+      box-shadow: 6px 0 24px rgba(35, 75, 80, 0.16);
+      z-index: 2;
+      border-right: 1px solid rgba(135, 172, 175, 0.3);
+    }
+
+    .envelope-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 47%;
+      background: #e3eff0;
+      z-index: 1;
+    }
+
+    .seal-wrap {
+      position: absolute;
+      top: 48%;
+      left: 53%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .seal-button {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #f7e2c6, #cfa272 55%, #9c6c39 95%);
+      box-shadow: 0 10px 24px rgba(92, 59, 27, 0.35), inset 0 2px 5px rgba(255, 255, 255, 0.75), inset 0 -3px 6px rgba(0, 0, 0, 0.3);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+    }
+
+    .seal-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 14px 28px rgba(92, 59, 27, 0.45);
+    }
+
+    .seal-inner-ring {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 245, 230, 0.55);
+      box-shadow: inset 0 0 10px rgba(110, 72, 32, 0.4);
+    }
+
+    .seal-text-svg {
+      position: absolute;
+      width: 175px;
+      height: 175px;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .seal-text-svg text {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 2.2px;
+      font-weight: 600;
+      font-style: italic;
+      fill: #855b2d;
+    }
+
+    .envelope-flora {
+      position: absolute;
+      bottom: 45%;
+      left: 51%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 220px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* --- PÁGINA 2: O CONVITE --- */
+    .invite-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      padding: 42px 28px 28px 28px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .header-msg {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17.5px;
+      line-height: 1.45;
+      font-style: italic;
+      color: #936338;
+      max-width: 320px;
+      letter-spacing: 0.3px;
+    }
+
+    .floral-bouquet-wrap {
+      width: 180px;
+      height: 60px;
+      margin: 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sub-blessing {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-weight: 500;
+      color: #8c5b2a;
+      letter-spacing: 0.8px;
+    }
+
+    .names-section {
+      margin: 8px 0;
+      line-height: 1;
+    }
+
+    .name-albert {
+      font-family: 'Great Vibes', cursive;
+      font-size: 64px;
+      color: #3b7479;
+      display: block;
+      font-weight: 400;
+      text-shadow: 0 1px 2px rgba(59, 116, 121, 0.12);
+    }
+
+    .name-amp {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 30px;
+      font-style: italic;
+      color: #407b80;
+      display: inline-block;
+      margin-left: 20px;
+      position: relative;
+      top: -8px;
+    }
+
+    .name-obito {
+      font-family: 'Great Vibes', cursive;
+      font-size: 70px;
+      color: #366b70;
+      display: block;
+      margin-top: -8px;
+      text-shadow: 0 1px 2px rgba(54, 107, 112, 0.12);
+    }
+
+    .event-details {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      line-height: 1.55;
+      color: #875727;
+      max-width: 320px;
+      font-weight: 500;
+    }
+
+    .next-page-btn {
+      margin-top: 10px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #447b80, #2f5d61);
+      color: #ffffff;
+      border: none;
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(47, 93, 97, 0.32);
+      transition: all 0.2s ease;
+    }
+
+    .next-page-btn:hover {
+      background: linear-gradient(135deg, #376a6e, #244b4e);
+      transform: translateY(-2px);
+    }
+
+    /* --- PÁGINA 3: AÇÕES E LINKS --- */
+    .actions-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px 30px;
+      width: 100%;
+      max-width: 320px;
+      margin: auto 0;
+    }
+
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .action-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #48868c, #3a7277);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 22px rgba(58, 114, 119, 0.28), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+      margin-bottom: 12px;
+      transition: box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .action-item:hover .icon-circle {
+      background: linear-gradient(135deg, #386f74, #275458);
+      box-shadow: 0 12px 26px rgba(58, 114, 119, 0.38);
+    }
+
+    .action-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #996431;
+      text-align: center;
+      line-height: 1.25;
+      max-width: 130px;
+    }
+
+    .action-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      color: #7b8e8f;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 4px;
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      padding: 9px 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(68, 123, 128, 0.4);
+      color: #3b7479;
+      border-radius: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(68, 123, 128, 0.12);
+    }
+
+    /* Florais decorativos */
+    .corner-floral {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.9;
+    }
+
+    .corner-floral.top-left {
+      top: -15px;
+      left: -15px;
+      width: 150px;
+      height: 150px;
+    }
+
+    .corner-floral.bottom-right {
+      bottom: -15px;
+      right: -15px;
+      width: 160px;
+      height: 160px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="invite-card">
+
+    <!-- PÁGINA 1: CAPA (ENVELOPE) -->
+    <div id="page-envelope" class="page active">
+      <div class="envelope-left"></div>
+      <div class="envelope-right"></div>
+
+      <!-- Raminho botânico saindo do selo -->
+      <svg class="envelope-flora" viewBox="0 0 100 160">
+        <path d="M 50 150 Q 45 90 35 40" stroke="#7e9c8f" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="33" cy="38" rx="7" ry="4" fill="#a4beaf" transform="rotate(-30 33 38)" opacity="0.85"/>
+        <ellipse cx="40" cy="65" rx="8" ry="4.5" fill="#a4beaf" transform="rotate(30 40 65)" opacity="0.85"/>
+        <ellipse cx="36" cy="95" rx="9" ry="5" fill="#a4beaf" transform="rotate(-35 36 95)" opacity="0.85"/>
+        <circle cx="28" cy="46" r="14" fill="#f0d57e" opacity="0.75"/>
+        <circle cx="25" cy="43" r="10" fill="#e7bc51" opacity="0.85"/>
+        <circle cx="26" cy="44" r="4" fill="#b08427" opacity="0.9"/>
+        <path d="M 52 145 Q 60 85 70 25" stroke="#b8a87b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <ellipse cx="68" cy="30" rx="5" ry="3" fill="#cfbe8e" opacity="0.8" transform="rotate(40 68 30)"/>
+        <ellipse cx="64" cy="50" rx="5.5" ry="3.5" fill="#cfbe8e" opacity="0.8" transform="rotate(-30 64 50)"/>
+        <ellipse cx="61" cy="72" rx="6" ry="3.5" fill="#cfbe8e" opacity="0.8" transform="rotate(35 61 72)"/>
+      </svg>
+
+      <!-- Selo de Cera Dourado Interativo -->
+      <div class="seal-wrap" onclick="goToPage('page-invite')">
+        <svg class="seal-text-svg" viewBox="0 0 200 200">
+          <defs>
+            <path id="openCurve" d="M 38,100 A 62,62 0 0,0 100,162 A 62,62 0 0,0 162,100" fill="none" />
+          </defs>
+          <text>
+            <textPath href="#openCurve" startOffset="50%" text-anchor="middle">
+              clique para abrir
+            </textPath>
+          </text>
+        </svg>
+
+        <div class="seal-button">
+          <div class="seal-inner-ring"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PÁGINA 2: O CONVITE -->
+    <div id="page-invite" class="page">
+      <div class="invite-content">
+        <p class="header-msg">Venha celebrar nosso amor e fazer parte da nossa hist&oacute;ria</p>
+
+        <!-- RAMINHO MINIMALISTA E ELEGANTE -->
+        <div class="floral-bouquet-wrap">
+          <svg viewBox="0 0 160 50" style="width: 100%; height: 100%;">
+            <!-- Haste central curvada e delicada -->
+            <path d="M 15 25 Q 80 15 145 25" stroke="#7a9e96" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
+            
+            <!-- Folhinhas finas e orgânicas à esquerda -->
+            <ellipse cx="35" cy="21" rx="7" ry="3" fill="#88aea5" transform="rotate(-25 35 21)" opacity="0.8"/>
+            <ellipse cx="55" cy="18" rx="8" ry="3.5" fill="#71978f" transform="rotate(-15 55 18)" opacity="0.85"/>
+            <ellipse cx="75" cy="19" rx="8" ry="3.5" fill="#88aea5" transform="rotate(-10 75 19)" opacity="0.8"/>
+
+            <!-- Folhinhas finas à direita -->
+            <ellipse cx="85" cy="19" rx="8" ry="3.5" fill="#88aea5" transform="rotate(10 85 19)" opacity="0.8"/>
+            <ellipse cx="105" cy="18" rx="8" ry="3.5" fill="#71978f" transform="rotate(15 105 18)" opacity="0.85"/>
+            <ellipse cx="125" cy="21" rx="7" ry="3" fill="#88aea5" transform="rotate(25 125 21)" opacity="0.8"/>
+
+            <!-- Folhinhas pendentes inferiores -->
+            <ellipse cx="45" cy="26" rx="6" ry="2.8" fill="#9cbdb6" transform="rotate(20 45 26)" opacity="0.7"/>
+            <ellipse cx="65" cy="24" rx="7" ry="3" fill="#7ba299" transform="rotate(15 65 24)" opacity="0.75"/>
+            <ellipse cx="95" cy="24" rx="7" ry="3" fill="#7ba299" transform="rotate(-15 95 24)" opacity="0.75"/>
+            <ellipse cx="115" cy="26" rx="6" ry="2.8" fill="#9cbdb6" transform="rotate(-20 115 26)" opacity="0.7"/>
+
+            <!-- Ponto central de equilíbrio -->
+            <circle cx="80" cy="19" r="2.2" fill="#5c827a" opacity="0.9"/>
+          </svg>
+        </div>
+
+        <p class="sub-blessing">Com a b&ecirc;n&ccedil;&atilde;o de Deus</p>
+
+        <div class="names-section">
+          <span class="name-albert">Albert <span class="name-amp">e</span></span>
+          <span class="name-obito">Obito</span>
+        </div>
+
+        <p class="event-details">
+          convidam para a celebra&ccedil;&atilde;o do seu casamento, que ir&aacute; se realizar no dia 14 de novembro, &agrave;s 16 horas, no La Jolla Cove, San Diego.
+        </p>
+
+        <button class="next-page-btn" onclick="goToPage('page-actions')">
+          Acessar Informa&ccedil;&otilde;es &amp; Links
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- PÁGINA 3: ÍCONES E LINKS -->
+    <div id="page-actions" class="page">
+      <!-- Florais de Canto -->
+      <svg class="corner-floral top-left" viewBox="0 0 100 100">
+        <circle cx="20" cy="20" r="26" fill="#daf0ea" opacity="0.7"/>
+        <circle cx="45" cy="20" r="16" fill="#c6e5dd" opacity="0.6"/>
+        <circle cx="20" cy="45" r="16" fill="#c6e5dd" opacity="0.6"/>
+        <ellipse cx="60" cy="30" rx="14" ry="7" fill="#84aca4" opacity="0.8" transform="rotate(30 60 30)"/>
+        <ellipse cx="30" cy="60" rx="14" ry="7" fill="#84aca4" opacity="0.8" transform="rotate(60 30 60)"/>
+      </svg>
+
+      <svg class="corner-floral bottom-right" viewBox="0 0 100 100">
+        <circle cx="80" cy="80" r="28" fill="#daf0ea" opacity="0.7"/>
+        <circle cx="55" cy="80" r="18" fill="#c6e5dd" opacity="0.6"/>
+        <circle cx="80" cy="55" r="18" fill="#c6e5dd" opacity="0.6"/>
+        <ellipse cx="40" cy="70" rx="15" ry="8" fill="#84aca4" opacity="0.8" transform="rotate(35 40 70)"/>
+        <ellipse cx="70" cy="40" rx="15" ry="8" fill="#84aca4" opacity="0.8" transform="rotate(55 70 40)"/>
+      </svg>
+
+      <div class="actions-content">
+        <div class="actions-grid">
+          <!-- 1. Confirme sua presença -->
+          <a href="https://t.me/+3tdY0HZnLLM2Yjlh" target="_blank" rel="noopener noreferrer" class="action-item">
+            <div class="icon-circle">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="action-title">Confirme sua presen&ccedil;a</span>
+            <span class="action-sub">Telegram</span>
+          </a>
+
+          <!-- 2. Localização -->
+          <a href="https://pin.it/1hquTNydg" target="_blank" rel="noopener noreferrer" class="action-item">
+            <div class="icon-circle">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="#ffffff">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <span class="action-title">Localiza&ccedil;&atilde;o</span>
+            <span class="action-sub">Ver no mapa</span>
+          </a>
+
+          <!-- 3. Fale com o noivo (Obito) -->
+          <a href="https://t.me/auaudobi" target="_blank" rel="noopener noreferrer" class="action-item">
+            <div class="icon-circle">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                <path d="M7 11 L13 8 L18 16 L13 29 L7 29 Z" fill="#ffffff"/>
+                <path d="M29 11 L23 8 L18 16 L23 29 L29 29 Z" fill="#ffffff"/>
+                <polygon points="18,16 15,10 21,10" fill="#ffffff" opacity="0.6"/>
+                <polygon points="18,13 16.5,22 18,27 19.5,22" fill="#ffffff"/>
+              </svg>
+            </div>
+            <span class="action-title">Fale com o noivo</span>
+            <span class="action-sub">Obito</span>
+          </a>
+
+          <!-- 4. Fale com o noivo (Albert) -->
+          <a href="https://t.me/donodoethan" target="_blank" rel="noopener noreferrer" class="action-item">
+            <div class="icon-circle">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                <path d="M7 11 L13 8 L18 16 L13 29 L7 29 Z" fill="#ffffff"/>
+                <path d="M29 11 L23 8 L18 16 L23 29 L29 29 Z" fill="#ffffff"/>
+                <polygon points="18,16 15,10 21,10" fill="#ffffff" opacity="0.6"/>
+                <polygon points="18,13 16.5,22 18,27 19.5,22" fill="#ffffff"/>
+              </svg>
+            </div>
+            <span class="action-title">Fale com o noivo</span>
+            <span class="action-sub">Albert</span>
+          </a>
+        </div>
+
+        <button class="back-btn" onclick="goToPage('page-invite')">
+          &larr; Ver Convite Novamente
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function goToPage(pageId) {
+      document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.remove('active');
+      });
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
